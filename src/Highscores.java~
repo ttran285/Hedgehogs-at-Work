@@ -1,0 +1,563 @@
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.io.*;
+import java.awt.event.*;
+import java.awt.print.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
+/** 
+ * This class displays the Happy Hedgehog Co. logo on an aesthetically 
+ * pleasing background, and more importantly displays the top high scores saved
+ * in a seperate file for each level of the game. This class also has methods
+ * that display to the user if their score is high scores worthy.
+ * Note that since javadoc is not picking up caught exceptions, we included the exceptions in the local
+ * variables.
+ * <p><b>Verison 1 (2.5 Hours):</b> The methods created were purely for printing the highscores
+ * (the getHighscores(), displayHighscores() amd print methods)</p>
+ * <p><b>Verison 2 (4 Hour):</b> The setHighscores() method was implemented, which also displays level complete.</p>
+ * 
+ * @author Aashmika Mali
+ * @version 1 05.16.16
+ * @version 2 05.23.16
+ * Program name: Highscores.java
+ */
+public class Highscores extends JPanel  implements Printable
+{
+  /*
+   * Private instance variables
+   * 
+   * */
+  /*
+   * background is an instance level BufferedImage for the highscores background.
+   * */      
+  BufferedImage background;
+  /*
+   * numScores1 is static int for the number of scores in the first level highscores (max of 10).
+   * */      
+  static int numScores1;
+  /*
+   * numScores3 is static int for the number of scores in the first level highscores (max of 10).
+   * */      
+  static int numScores2;
+  /*
+   * numScores3 is static int for the number of scores in the first level highscores (max of 10).
+   * */      
+  static int numScores3;
+  /*
+   * level1Scores is a static Integer arraylist with the highscores from level 1 inputted from the .aash file.
+   * */      
+  static ArrayList <Integer> level1Scores = new ArrayList <Integer> ();
+  /*
+   * level2Scores is a static Integer arraylist with the highscores from level 2 inputted from the .aash file.
+   * */      
+  static ArrayList <Integer> level2Scores = new ArrayList <Integer> ();
+  /*
+   * level3Scores is a static Integer arraylist with the highscores from level 3 inputted from the .aash file.
+   * */      
+  static ArrayList <Integer> level3Scores = new ArrayList <Integer> ();
+  /*
+   * level1Names is a static String arraylist with the names for the 
+   * highscores holders from level 1 inputted from the .aash file.
+   * */      
+  static ArrayList <String> level1Names = new ArrayList <String> ();
+  /*
+   * level2Names is a static String arraylist with the names for the 
+   * highscores holders from level 2 inputted from the .aash file.
+   * */      
+  static ArrayList <String> level2Names = new ArrayList <String> ();
+  /*
+   * level3Names is a static String arraylist with the names for the 
+   * highscores holders from level 3 inputted from the .aash file.
+   * */      
+  static ArrayList <String> level3Names = new ArrayList <String> ();
+  
+  /*
+   * An int that stores the user's score.
+   * */  
+  static int userScore;
+  /*
+   * A string that stores the user's name.
+   * */  
+  static String userName;
+  /*
+   * A boolean that stores the value of if the score is highscores worthy or not.
+   * */  
+  static boolean onHighscoresBoard;
+  
+  
+  /**
+   * This is the no parameter class constructor.
+   * It calls the class MouseAdapter, to with abstract method MousePressed
+   * to check what button the user selected.
+   * The if structure checks where the user has pressed, and then carries out the correct operations.
+   * The inside if structure checks if the object can be printed. This constructor makes it possible
+   * for the user to use keyboard shortcuts.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>relativeX </b> This creates an int variable to save the x location of where the user clicked.
+   * <p>
+   * <b>relativeY </b> This creates an int variable to save the y location of where the user clicked.
+   * <p>
+   * <b>ok</b> This boolean saves the value of if the object is good for printing.
+   * <p>
+   * <b>job</b> Of type PrinterJob, it saves the job needed to print the object.
+   * <p>
+   * <b>back</b> This points to the Action class.
+   * <p>
+   * <b>print</b> This points to the Action class.
+   * <p>
+   * <b>Parameters:</b>
+   * <p>
+   * e - This points to the ActionEvent class.
+   * */
+  public Highscores() 
+  {           
+    Action back = new AbstractAction() { //Back to main menu
+      @Override public void actionPerformed(ActionEvent e) {
+        Driver.changeScreens("MainMenu"); 
+      }
+    };
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("BACK_SPACE"), "back");
+    this.getActionMap().put("back", back);
+    
+    Action print = new AbstractAction() { //Print
+      @Override public void actionPerformed(ActionEvent e) {
+        doPrintStuff();
+      }
+    };
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "print");
+    this.getActionMap().put("print", print);
+    
+    addMouseListener(new MouseAdapter() { 
+      public void mousePressed(MouseEvent e) { 
+        int relativeX = e.getX();
+        int relativeY = e.getY();
+        if (relativeX >= 911 && relativeX <= 980 && relativeY >= 600 && relativeY <= 673)
+        {
+          Driver.changeScreens("MainMenu");
+        }
+        else
+        {
+          if (relativeX >= 18 && relativeX <= 75 && relativeY >= 595 && relativeY <= 673)
+          {
+            doPrintStuff();
+          }
+        }
+      } 
+    }); 
+  }
+  
+  /**
+   * This method makes sure it is okay to print and then it calls the print method.
+   * <p>
+   * <b>ok</b> This boolean saves the value of if the object is good for printing.
+   * <p>
+   * <b>job</b> Of type PrinterJob, it saves the job needed to print the object.
+   * <p>
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>PrinterException ex </b> It is the caught exception when calling the print method.
+   * */
+  public void doPrintStuff()
+  {
+    PrinterJob job = PrinterJob.getPrinterJob();
+    job.setPrintable(Highscores.this);
+    boolean ok = job.printDialog();
+    if (ok) 
+    {
+      try 
+      {
+        job.print();
+      } 
+      catch (PrinterException ex) 
+      {                
+      }
+    }
+  }
+  
+  /**
+   * This method gets the information in the .aash files for the cores, and saves them in the instance arraylists.
+   * The try and catch block tries to read from the files, and catch for any IOexcptions.
+   * The if structures check if the header matches in the .aash files.
+   * The for loops are used to keep reading in information for the number of scores.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>input, input2, input3 </b> This creates a BufferedReader for each .aash file the user is reading to.
+   * <p>
+   * <b>d </b> This is the for loop int variable incremented for the number of scores in the file.
+   * <p>
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>IOException o </b> This is the exception caught when reading from another file.
+   */ 
+  static public void getInformation ()
+  {
+    BufferedReader input, input2, input3;
+    try
+    {
+      input = new BufferedReader (new FileReader ("resources/Highscores/Level1.aash"));
+      if (input.readLine ().equals ("This file saves the highscores for level 1 of 'Hedgehogs at work'. Its file extension is .aash."))
+      {
+        numScores1 = Integer.parseInt (input.readLine ());
+        for (int d = 0; d < numScores1; d++)
+        {
+          level1Names.add (input.readLine ());
+          level1Scores.add (Integer.parseInt (input.readLine ()));
+        }
+      }
+      input.close ();
+    }
+    catch (IOException a)
+    {
+      PrintWriter output;
+      try
+      {
+        output = new PrintWriter (new FileWriter ("resources/Highscores/Level1.aash"));
+        output.println ("This file saves the highscores for level 1 of 'Hedgehogs at work'. Its file extension is .aash.");
+        output.println ("0");      
+        output.close();
+      }
+      catch (IOException p)
+      {
+      }
+    }
+    try 
+    {
+      input2 = new BufferedReader (new FileReader ("resources/Highscores/Level2.aash"));
+      if (input2.readLine ().equals ("This file saves the highscores for level 2 of 'Hedgehogs at work'. Its file extension is .aash."))
+      {
+        numScores2 = Integer.parseInt (input2.readLine ());
+        for (int d = 0; d < numScores2; d++)
+        {
+          level2Names.add (input2.readLine ());
+          level2Scores.add (Integer.parseInt (input2.readLine ()));
+        }
+      }
+      input2.close ();
+    }
+    catch (IOException s)
+    {
+      PrintWriter output;
+      try
+      {
+        output = new PrintWriter (new FileWriter ("resources/Highscores/Level2.aash"));
+        output.println ("This file saves the highscores for level 2 of 'Hedgehogs at work'. Its file extension is .aash.");
+        output.println ("0");    
+        output.close();
+      }
+      catch (IOException l)
+      {
+      }
+    }
+    try
+    {
+      input3 = new BufferedReader (new FileReader ("resources/Highscores/Level3.aash"));
+      if (input3.readLine ().equals ("This file saves the highscores for level 3 of 'Hedgehogs at work'. Its file extension is .aash."))
+      {
+        numScores3 = Integer.parseInt (input3.readLine ());
+        for (int d = 0; d < numScores3; d++)
+        {
+          level3Names.add (input3.readLine ());
+          level3Scores.add (Integer.parseInt (input3.readLine ()));
+        }
+      }
+      input3.close ();
+      
+    }
+    catch (IOException o)
+    {
+      PrintWriter output;
+      try
+      {
+        output = new PrintWriter (new FileWriter ("resources/Highscores/Level3.aash"));
+        output.println ("This file saves the highscores for level 3 of 'Hedgehogs at work'. Its file extension is .aash.");
+        output.println ("0");        
+        output.close();
+      }
+      catch (IOException e)
+      {
+      }
+    }
+  }
+  
+  /**
+   * This method displays the scores and background for the user to see before printing.
+   * The if structures check if there are any scores to print.
+   * The for loops repeat for the number of scores in the level.
+   * The try and catch block try to read the Image file successfully, and catches for the IOException.
+   * This method overrides the super paintComponent method.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>a</b> This is the for loop variable incremented for the number of scores for the level.
+   * <p>
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>IOException e </b> This is the exception caught when reading an image from a file.
+   * 
+   * @param g Graphics is needed to display the images.
+   */ 
+  public void paintComponent(Graphics g) 
+  { 
+    super.paintComponent(g);       
+    try
+    {
+      background = ImageIO.read(new File("resources/Images/Backgrounds/HighScores.png"));   
+    }
+    catch (IOException e)
+    {
+    }        
+    g.drawImage (background, 0, 0, null);
+    g.drawString ("<<PLEASE MAKE SURE TO PRINT IN LANDSCAPE>>", 330, 640);  
+    g.setFont(new Font("TimesRoman", Font.BOLD, 18));
+    if (level1Scores.size() > 0)
+    {              
+      for (int a = 0; a < numScores1; a++)
+      {
+        g.drawString (level1Names.get(a), 155, 208 + a * 44);
+        g.drawString ("" + level1Scores.get(a), 325, 208 + a * 44);
+      }
+    }
+    if (level2Scores.size() > 0)
+    {
+      for (int a = 0; a < numScores2; a++)
+      {
+        g.drawString (level2Names.get(a), 420, 208 + a * 44);
+        g.drawString ("" + level2Scores.get(a), 590, 208 + a * 44);
+      }
+    }
+    if (level3Scores.size() > 0)
+    {
+      for (int a = 0; a < numScores3; a++)
+      {
+        g.drawString (level3Names.get(a), 680, 208 + a * 44);
+        g.drawString ("" + level3Scores.get(a), 850, 208 + a * 44);
+      }          
+    }
+  }
+  
+  /**
+   * This method sorts the scores and their correspoding names into the proper largest to
+   * smallest order, using the insertion sorting technique.
+   * The for loop is used to sort for all elements of the arrayList.
+   * The while loop is to sort if the temp was greater than another integer.
+   * The if structure in the algorithm is to check if the score is greater than the temp score.
+   * The other if structure is used to save the correct name in the correct name arraylist.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>stringTemp</b>This saves the temporary name while sorting.
+   * <p>
+   * <b>i</b> This is the for loop variable incremented for the number of elements in the score array.
+   * <p>
+   * <b>j</b> This is an integer used to check every element of the array.
+   * <p>
+   * <b>temp</b> This saves the temporary score while sorting.
+   * @param array ArrayList Integer passes in the score array.
+   * @return array ArrayList Integer  returns the scores 
+   */ 
+  static public ArrayList<Integer> insertion (ArrayList <Integer> array)
+  { 
+    String stringTemp;
+    for (int i = 0; i < array.size() - 1; i++)
+    {
+      int j = i + 1;
+      int temp = array.get(j);
+      if (LevelSelect.levelChosen == 1)
+      {
+        stringTemp = level1Names.get(j);
+      }
+      else if (LevelSelect.levelChosen == 2)
+      {
+        stringTemp = level2Names.get(j);
+      }
+      else
+      {
+        stringTemp = level3Names.get(j);
+      }
+      while (j > 0 && temp > array.get(j-1))
+      {
+        array.set(j, array.get(j - 1));
+        if (LevelSelect.levelChosen == 1)
+        {
+          level1Names.set(j, level1Names.get(j - 1));
+        }
+        else if (LevelSelect.levelChosen == 2)
+        {
+          level2Names.set(j, level2Names.get(j - 1));
+        }
+        else
+        {
+          level3Names.set(j, level3Names.get(j - 1));
+        }
+        j--;
+      }
+      array.set (j, temp);
+      if (LevelSelect.levelChosen == 1)
+      {
+        level1Names.set(j, stringTemp);
+      }
+      else if (LevelSelect.levelChosen == 2)
+      {
+        level2Names.set(j, stringTemp);
+      }
+      else
+      {
+        level3Names.set(j, stringTemp);
+      } 
+    }
+    return array;
+  }
+  
+  
+  /**
+   * This method sets a highscore to the file based on the scores entered throgh the parameter. It is a 
+   * static method, so the score can be set from another class.
+   * The try and catch is used to make sure that it catches for an error when writing to another file.
+   * The if structures are used to check what arraylist to save the score and name to, and also to check
+   * if there are already 10 scores, otherwise the numScores is incremented.
+   * The for loops are used to write all the scores and names to the files.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>file </b> This creates a PrintWriter to allow the program to write to another file.
+   * <p>
+   * <b>nameOfFile </b> A string that saves the file name.
+   * <p>
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>IOException e </b> It is an exception caught when writing to a file.
+   * 
+   * @param score int passes in the score to set.
+   * @param name String passes in the name to set. 
+   */ 
+  static public void setHighscores (int score, String name)
+  {
+    onHighscoresBoard = false;
+    userScore = score;
+    userName = name;
+    PrintWriter file;
+    String nameOfFile = "Level" + LevelSelect.levelChosen;
+    try 
+    {
+      file = new PrintWriter (new FileWriter ("resources/Highscores/" + nameOfFile + ".aash"));          
+      file.println ("This file saves the highscores for level " + LevelSelect.levelChosen  + " of 'Hedgehogs at work'. Its file extension is .aash.");
+      if (LevelSelect.levelChosen == 1)
+      {
+        if (numScores1 < 10)
+        {
+          numScores1++;
+        }
+        level1Names.add (name);
+        level1Scores.add (score);
+        level1Scores = insertion (level1Scores);
+        file.println (numScores1);       
+        for (int z = 0; z < numScores1; z++)
+        {  
+          file.println (level1Names.get(z));       
+          file.println (level1Scores.get(z));  
+          if (level1Names.get(z).equals (name) && level1Scores.get(z) == score)
+          {
+            onHighscoresBoard = true;
+          }
+        }        
+      }
+      else if (LevelSelect.levelChosen == 2)
+      {
+        if (numScores2 < 10)
+        {
+          numScores2++;
+        }     
+        level2Names.add (name);
+        level2Scores.add (score);
+        level2Scores = insertion (level2Scores);
+        file.println (numScores2);   
+        System.out.println (numScores2);
+        for (int z = 0; z < numScores2; z++)
+        {  
+          file.println (level2Names.get(z));       
+          file.println (level2Scores.get(z));
+          if (level2Names.get(z).equals (name) && level2Scores.get(z) == score)
+          {
+            onHighscoresBoard = true;
+          }
+        }
+      }
+      else
+      {
+        if (numScores3 < 10)
+        {
+          numScores3++;
+        }
+        level3Names.add (name);
+        level3Scores.add (score);
+        level3Scores = insertion (level3Scores);
+        file.println (numScores3);       
+        for (int z = 0; z < numScores3; z++)
+        {  
+          file.println (level3Names.get(z));       
+          file.println (level3Scores.get(z));       
+          if (level3Names.get(z).equals (name) && level3Scores.get(z) == score)
+          {
+            onHighscoresBoard = true;
+          }
+        }
+      }      
+      file.close ();
+    }
+    catch (IOException i)
+    {
+    }
+  }
+  
+  /**
+   * This method is an abstract method of printable, used to print to the printer.
+   * The if structure check if there are scores to print, otherwise the string
+   * is not drawn to the printer graphics.
+   * The for loops draw all the names and scores for the levels for the amount of times needed.
+   * 
+   * @param g Graphics is used for the graphics the print method is drawing to.
+   * @param pf PageFormat is used for the method's
+   * @throws PrinterException needed for this print method.
+   * @return int
+   */ 
+  public int print(Graphics g, PageFormat pf, int page)
+    throws PrinterException {   
+    if (page > 0) {
+      return NO_SUCH_PAGE;
+    }
+    Graphics2D g2d = (Graphics2D)g;
+    g2d.translate(pf.getImageableX(), pf.getImageableY());
+    g.drawImage(background.getScaledInstance((int)(background.getWidth(null) * .75), (int)(background.getHeight(null) * .85), Image.SCALE_DEFAULT), 0, 0, null);
+    if (level1Scores.size() > 0)
+    {              
+      for (int a = 0; a < numScores1; a++)
+      {
+        g.drawString (level1Names.get(a), 125, 175 + a * 37);
+        g.drawString ("" + level1Scores.get(a), 250, 175 + a * 37);
+      }
+    }
+    if (level2Scores.size() > 0)
+    {
+      for (int a = 0; a < numScores2; a++)
+      {
+        g.drawString (level2Names.get(a), 318, 175 + a * 37);
+        g.drawString ("" + level2Scores.get(a), 450, 175 + a * 37);
+      }
+    }
+    if (level3Scores.size() > 0)
+    {
+      for (int a = 0; a < numScores3; a++)
+      {
+        g.drawString (level3Names.get(a), 515, 175 + a * 37);
+        g.drawString ("" + level3Scores.get(a), 645, 175 + a * 37);
+      }          
+    }
+    return PAGE_EXISTS;
+  }  
+}

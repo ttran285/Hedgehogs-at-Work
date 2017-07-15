@@ -1,0 +1,235 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.print.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.ImageIO;
+
+/** 
+ * This is the class that will display and print out the certificate for the user.
+ * The print code (the method and printCertificate code) was taken from "Oracle and/or its affiliates".
+ * Note that since javadoc is not picking up caught exceptions, we included the exceptions in the local
+ * variables.
+ * <p><b>Verison 1 (4.5 Hours):</b> Printing code and all methods created in this version.</p>
+ * @author Aashmika Mali  
+ * @version 1 05.14.16
+ * Program name: Certificate.java
+ */
+public class Certificate extends JPanel implements Printable
+{
+  /**
+   * Private instance variables
+   * 
+   * */
+  /**
+   * Saves the JFrame in a variable named frame.
+   * 
+   * */    
+  private JFrame frame;
+  /*
+   * Saves the certificate image in a Image variable named certificate.
+   * 
+   * */    
+  BufferedImage certificate;
+  /**
+   * Saves the SpringLayout in a SpringLayout class varaible s1.
+   * 
+   * */    
+  SpringLayout s1 = new SpringLayout();
+  /**
+   * The constructor. This displays the certificate to the frame passed in.
+   * The constructor also makes it possible to print the certificate and continue to the 
+   * high score screen using keyboard shortcuts.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>rootPane </b> Points to the JRootPane class.
+   * <p>
+   * <b>print </b> Points to the Action class.
+   * <p>
+   * <b>cont </b> Points to the Action class.
+   * 
+   * @param f is the JFrame passed in from the driver. 
+   * 
+   * <p>
+   * <b>Parameters:</b>
+   * <p>
+   * e - This points to the ActionEvent class.
+   * */
+  public Certificate (JFrame f)
+  {
+    frame = f;
+    JRootPane rootPane = frame.getRootPane();
+    
+    Action print = new AbstractAction() { 
+      @Override public void actionPerformed(ActionEvent e) {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable(Certificate.this);
+        boolean ok = job.printDialog();
+        if (ok) 
+        {
+          try 
+          {
+            job.print();
+          } 
+          catch (PrinterException ex) 
+          {
+          }
+        }
+      }
+    };
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "print");
+    rootPane.getActionMap().put("print", print);    
+    
+    Action cont = new AbstractAction() {
+      @Override public void actionPerformed(ActionEvent e) {
+        frame.getContentPane().removeAll();
+        Driver.changeScreens ("Highscores");        
+        frame.revalidate();
+        frame.repaint();   
+      }
+    };
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"), "continue");
+    rootPane.getActionMap().put("continue", cont);
+    
+    displayCertificate ();
+  }
+  
+  /**
+   * This method asks the user if they would like to print the certificate.
+   * The inside if structure checks if the object can be printed.
+   * The ActionListener class inside the method is used in case of a button being pressed. It has the abstract
+   * class actionPerformed.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>printButton </b> This creates an instance of the JButton class called if the user wants to print.
+   * <p>
+   * <b>continueButton </b> This creates an instance of the JButton class called if the user does not want to print.
+   * <p>
+   * <b>ok</b> This boolean saves the value of if the object is good for printing.
+   * <p>
+   * <b>job</b> Of type PrinterJob, it saves the job needed to print the object.
+   * <p>
+   * <b>ex </b> Of type PrinterException, it is caught when calling the print method.
+   * 
+   * @param pane It is of type JPanel and is used to display the certificate. 
+   * 
+   * <p>
+   * <b>Parameters:</b>
+   * <p>
+   * ae - This points to the ActionEvent class.
+   * */  
+  public void printCertificate (JPanel pane)
+  {
+    LevelSelect.levelChosen = 3;
+    
+    JButton printButton = new JButton("Print Certificate");
+    JButton continueButton = new JButton("Continue");
+    printButton.addActionListener(new ActionListener ()
+                                    {
+      public void actionPerformed(ActionEvent ae) {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable(Certificate.this);
+        boolean ok = job.printDialog();
+        if (ok) 
+        {
+          try 
+          {
+            job.print();
+          } 
+          catch (PrinterException ex) 
+          {
+          }
+        }
+      }  
+    });
+    
+    continueButton.addActionListener(new ActionListener ()
+                                       {
+      public void actionPerformed(ActionEvent ae) {
+        frame.getContentPane().removeAll();
+        Driver.changeScreens ("Highscores");        
+        frame.revalidate();
+        frame.repaint();    
+      }  
+    });
+    setLayout (s1);
+    pane.add(printButton);
+    pane.add(continueButton);
+    s1.putConstraint (SpringLayout.WEST, printButton, 0, SpringLayout.WEST, pane);
+    s1.putConstraint (SpringLayout.EAST, continueButton, 0, SpringLayout.EAST, pane);
+    pane.setVisible(true);    
+    pane.revalidate();
+    pane.repaint();    
+  }
+  
+  
+  /**
+   * This method dislplays the certificate for the user to view before printing.
+   * The @Override tells the compiler that the following method overrides a method in the superclass.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>pane</b> This creates an instance of the JPanel class, that is used to display the image.
+   * <p>
+   * <b>e </b> Of type IOException, it is used when reading from the file for the background image.
+   * <p>   
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>IOException e </b> This is an exception caught when using a MediaTracker.
+   * <p>
+   * <b>Parameters:</b>
+   * <p>
+   * g - This points to the Graphics class.
+   * 
+   * */  
+  public void displayCertificate ()
+  {
+    try
+    {
+      certificate = ImageIO.read(new File("resources/Images/Backgrounds/Certificate.png"));   
+      JPanel pane = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+          super.paintComponent(g);
+          g.drawImage(certificate, 0, 0, null);
+          g.drawString (LevelSelect.userName, 520, 500);
+          g.drawString ("<<PLEASE MAKE SURE TO PRINT IN LANDSCAPE>>", 300, 540);
+        }
+      };
+      frame.add(pane);
+      printCertificate (pane);
+    }
+    catch (IOException e)
+    {
+    }    
+  }
+  
+  /**
+   * This method is an abstract class of implemented class Printable, and is used to print graphics to a printer.
+   * The if structure is used to make sure it is printing on at least one page.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>g2d</b> This is used to create a 2d graphics with object Graphics2D.
+   * 
+   * @param g Graphics is used for the graphics the print method is drawing to.
+   * @param pf PageFormat is used for the method's
+   * @throws PrinterException needed for this print method.
+   * @return int
+   * */  
+  public int print(Graphics g, PageFormat pf, int page)
+    throws PrinterException {   
+    if (page > 0) {
+      return NO_SUCH_PAGE;
+    }
+    Graphics2D g2d = (Graphics2D)g;
+    g2d.translate(pf.getImageableX(), pf.getImageableY());
+    g.drawImage(certificate.getScaledInstance ((int)(certificate.getWidth() * .9), (int)(certificate.getHeight() * .9), Image.SCALE_DEFAULT), 0, 0, null);
+    g.drawString (LevelSelect.userName, 470, 450);
+    return PAGE_EXISTS;
+  }  
+  
+}

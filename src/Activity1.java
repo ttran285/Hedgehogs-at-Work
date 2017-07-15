@@ -1,0 +1,552 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.ImageIO;
+/** 
+ * This class has all of the processing of the first activity of our game. It makes 
+ * draging and dropping the hedgehogs possible and also checks to make sure the right 
+ * coloured hedgehog is being dropped into the right coloured box. If it has, it will
+ * update the user's score and display an encouraging message each time they have
+ * successfully placed a group of hedgehogs into their designated boxes.
+ * 
+ * <p><b>Version 1 (3 Hours):</b> Figuring out drag and drop. Done by Tiffany.</p>
+ * <p><b>Version 2 (3 Hours):</b> Figuring out drag and drop. Done by Aashmika.</p>
+ * <p><b>Version 3 (1.5 Hours):</b> Methods were added with implementations of all three levels. Done by Tiffany.</p>
+ * 
+ * @author Tiffany Tran Modified by Aashmika Mali
+ * 
+ * @version 1 05.16.16
+ * @version 2 05.19.16
+ * @version 3 05.20.16
+ * Program name: Activity1.java
+ */
+public  class Activity1 extends JPanel
+{
+  /**
+   * The number of the hedgehog we're dealing with.
+   * */
+  int hogNum;
+  
+  /**
+   * This stores a phrase of encouragement that is shown to the user.
+   * */
+  int phrase = 0;
+  
+  /**
+   * This stores the temporary X coordinates for the hedgehogs.
+   * */
+  int [] tempX = new int [12]; 
+  
+  /**
+   * This stores the temporary Y for the hedgehogs.
+   * */
+  int [] tempY = new int [12];
+  
+  /**
+   * This stores whether or not a certain hedgehog has already been put into the correct box.
+   * */
+  boolean [] correctPos = new boolean [6];
+  
+  /**
+   * This stores the starting coordinates for all of the hedgehogs.
+   * */
+  int [] coordinates = {40, 270, 200, 270, 360, 270, 520, 270, 680, 270, 840, 270};
+  
+  /**
+   * A reference variable used to point to the SpringLayout class.
+   * */
+  SpringLayout layout = new SpringLayout();
+  
+  /**
+   * This is the class constructor. It sets the layout of the panel to spring layout and placed the 
+   * timer onto the background. It is also used to allow the user to drag and drop the hedgehogs. The
+   * try catch block are used to prevent the program from crashing in the event that an error occurs.
+   * The constructor also makes it possible to pause the game using keyboard shortcuts.
+   * <p>
+   * Within this constructor, a mousePressed method is there to implement MouseEvent. This method
+   * checks to see where the user has pressed. If they pressed the area in which a hedgehog is located,
+   * it will set the hogNum to that hedgehog to be used for processing later in the constructor. If they
+   * pressed the area in which the pause button is located, the activity they are playing will be paused
+   * and they will be taken to another screen where they can choose to resume the game or return to the 
+   * main menu.
+   * <p>
+   * This constructor also contains a mouseReleased method which is used to implement MouseEvent. This 
+   * method checks to see where the user has released the hedgehog. If they released it in the correct
+   * box, the hedgehog will dissapear.
+   * <p>
+   * Along with that, this constructor contains a mouseDragged method which is used to implement MouseEvent.
+   * This method makes sure the user does not drag the hedgehogs offscreen and it is also used to update
+   * the current location of the hedgehogs.
+   * <p>
+   * <b>Parameters:</b>
+   * <p>
+   * e - This points to the MouseEvent class.
+   * <p>
+   * e - This points to the ActionEvent class.
+   * 
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>h </b> This is a reference varible that points to the Hedgehog class.
+   * <p>
+   * <b>b </b> This is a reference varible that points to the Box class.
+   * <p>
+   * <b>c </b> This is a reference varible that points to the Countdown class.
+   * <p>
+   * <b>x </b> This is used in the for loop.
+   * <p>
+   * <b>temp1 </b> This stores the current x coordinate.
+   * <p>
+   * <b>temp2 </b> This stores the current y coordinate.
+   * <p>
+   * <b>p </b> This is a reference varible that points to the Pause class.
+   * <p>
+   * <b>pause </b> This points to the Action class.
+   * <p>
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>ArrayIndexOutOfBoundsException f </b> This is used to prevent the program from crashing because of array issues.
+   * <p>
+   * <b>IndexOutOfBoundsException i </b> This is used to prevent the program from crashing because of array issues.
+   */ 
+  public Activity1 () 
+  {      
+    setLayout(layout); 
+    
+    layout.putConstraint (SpringLayout.NORTH, Countdown.time, 10, SpringLayout.NORTH, Activity1.this); 
+    layout.putConstraint (SpringLayout.WEST, Countdown.time, 910, SpringLayout.WEST, Activity1.this);
+    
+    add(Countdown.time);
+    setVisible(true);
+    
+    Hedgehog h = new Hedgehog (); 
+    Box b = new Box ();    
+    Countdown c = new Countdown();  
+    
+    for (int x = 0; x < 6; x++)
+    {
+      correctPos[x] = false;
+    }
+    
+    repaint ();
+    
+    Action pause = new AbstractAction() { 
+      @Override public void actionPerformed(ActionEvent e) {
+        Pause.pausePressed = true;
+        Driver.frame.setVisible(false);
+        Pause p = new Pause();
+      }
+    };
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "pause");
+    this.getActionMap().put("pause", pause);
+    
+    addMouseListener(new MouseAdapter(){
+      public void mousePressed(MouseEvent e){
+        
+        int temp1, temp2;
+        temp1 = e.getX();
+        temp2 = e.getY();
+        
+        if (temp1 >= 18 && temp1 <= 93 && temp2 >= 22 && temp2 <= 92)
+        {
+          Pause.pausePressed = true;
+          Driver.frame.setVisible(false);
+          Pause p = new Pause();
+        }
+        
+        if (temp1 >= coordinates[0] && temp1 <= coordinates[0] + 120 && temp2 >= coordinates[1] && temp2 <= coordinates[1] + 70) //First hog
+        {
+          hogNum = 1;
+        }
+        else if (temp1 >= coordinates[2] && temp1 <= coordinates[2] + 120 && temp2 >= coordinates[3] && temp2 <= coordinates[3] + 70) //Second hog
+        {
+          hogNum = 2;            
+        }
+        else if (temp1 >= coordinates[4] && temp1 <= coordinates[4] + 120 && temp2 >= coordinates[5] && temp2 <= coordinates[5] + 70) //Third hog
+        {
+          hogNum = 3;            
+        }
+        else if (temp1 >= coordinates[6] && temp1 <= coordinates[6] + 120 && temp2 >= coordinates[7] && temp2 <= coordinates[7] + 70) //Fourth hog
+        {
+          hogNum = 4;             
+        }
+        else if (temp1 >= coordinates[8] && temp1 <= coordinates[8] + 120 && temp2 >= coordinates[9] && temp2 <= coordinates[9] + 70) //Fifth hog
+        {
+          hogNum = 5;            
+        }
+        else 
+        {
+          if (temp1 >= coordinates[10] && temp1 <= coordinates[10] + 120 && temp2 >= coordinates[11] && temp2 <= coordinates[11] + 70) //Sixth hog
+          {
+            hogNum = 6;          
+          }
+        }
+        repaint();
+      }
+      
+      public void mouseReleased(MouseEvent e) {
+        if (hogNum == 1)
+        {
+          tempX[0] = e.getX();
+          tempY[0] = e.getY();
+        }
+        else if (hogNum == 2)
+        {
+          tempX[1] = e.getX();
+          tempY[1] = e.getY();
+        }
+        else if (hogNum == 3)
+        {
+          tempX[2] = e.getX();
+          tempY[2] = e.getY();
+        }
+        else if (hogNum == 4)
+        {
+          tempX[3] = e.getX();
+          tempY[3] = e.getY();
+        }
+        else if (hogNum == 5)
+        {
+          tempX[4] = e.getX();
+          tempY[4] = e.getY();
+        }
+        else 
+        {
+          if (hogNum == 6)
+          {
+            tempX[5] = e.getX();
+            tempY[5] = e.getY();
+          }
+        }
+        
+        try
+        {
+          if (LevelSelect.levelChosen == 1 && hogNum != 0 && !correctPos[hogNum-1])  
+          {
+            
+            if ((e.getX() >= 10 && e.getX() <= 145 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(0))) ||(e.getX() >= 233 && e.getX() <= 346 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(1)))) /////////
+            {
+              correctPos[hogNum-1] = true;     
+              LevelSelect.lvlOneScore++;
+            }
+            else
+            {
+              if(e.getY() >= 438 && e.getY() <= 640 && (e.getX() >= 10 && e.getX() <= 155 || e.getX() >= 233 && e.getX() <= 356))
+              {
+                if (hogNum == 1)
+                {
+                  coordinates[0] = 40;
+                  coordinates[1] = 270;
+                }
+                else if (hogNum == 2)
+                {
+                  coordinates[2] = 200;
+                  coordinates[3] = 270;
+                }
+                else if (hogNum == 3)
+                {
+                  coordinates[4] = 360;
+                  coordinates[5] = 270;
+                }
+                else if (hogNum == 4)
+                {
+                  coordinates[6] = 520;
+                  coordinates[7] = 270;
+                }
+                else if (hogNum == 5)
+                {
+                  coordinates[8] = 680;
+                  coordinates[9] = 270;
+                }
+                else 
+                {
+                  if (hogNum == 6)
+                  {
+                    coordinates[10] = 840;
+                    coordinates[11] = 270;
+                  }
+                }             
+              }
+            }
+          }
+          else if (LevelSelect.levelChosen == 2 && hogNum != 0 && !correctPos[hogNum-1])
+          {
+            if ((e.getX() >= 10 && e.getX() <= 145 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(0))) ||(e.getX() >= 233 && e.getX() <= 346 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(1)))||(e.getX() >= 450 && e.getX() <= 569 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(2)))) /////////
+            {
+              correctPos[hogNum-1] = true;      
+              LevelSelect.lvlTwoScore++;
+            }
+            
+            else
+            {
+              if(e.getY() >= 438 && e.getY() <= 640 && (e.getX() >= 10 && e.getX() <= 155 || e.getX() >= 233 && e.getX() <= 356 || e.getX() >= 450 && e.getX() <= 579))
+              {
+                if (hogNum == 1)
+                {
+                  coordinates[0] = 40;
+                  coordinates[1] = 270;
+                }
+                else if (hogNum == 2)
+                {
+                  coordinates[2] = 200;
+                  coordinates[3] = 270;
+                }
+                else if (hogNum == 3)
+                {
+                  coordinates[4] = 360;
+                  coordinates[5] = 270;
+                }
+                else if (hogNum == 4)
+                {
+                  coordinates[6] = 520;
+                  coordinates[7] = 270;
+                }
+                else if (hogNum == 5)
+                {
+                  coordinates[8] = 680;
+                  coordinates[9] = 270;
+                }
+                else 
+                {
+                  if (hogNum == 6)
+                  {
+                    coordinates[10] = 840;
+                    coordinates[11] = 270;
+                  }
+                }             
+              }
+            }
+          }
+          else
+          {
+            if (LevelSelect.levelChosen == 3 && hogNum != 0 && !correctPos[hogNum-1])
+            {
+              if ((e.getX() >= 10 && e.getX() <= 145 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(0))) ||(e.getX() >= 233 && e.getX() <= 346 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(1)))||(e.getX() >= 450 && e.getX() <= 569 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(2)))||(e.getX() >= 671 && e.getX() <= 787 && e.getY() >= 438 && e.getY() <= 640 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(3)))) /////////
+              {
+                correctPos[hogNum-1] = true;     
+                LevelSelect.lvlThreeScore++;
+              }
+              
+              else
+              {
+                if(e.getY() >= 438 && e.getY() <= 640 && (e.getX() >= 10 && e.getX() <= 155 || e.getX() >= 233 && e.getX() <= 356 || e.getX() >= 450 && e.getX() <= 579 || e.getX() >= 671 && e.getX() <= 797))
+                {
+                  if (hogNum == 1)
+                  {
+                    coordinates[0] = 40;
+                    coordinates[1] = 270;
+                  }
+                  else if (hogNum == 2)
+                  {
+                    coordinates[2] = 200;
+                    coordinates[3] = 270;
+                  }
+                  else if (hogNum == 3)
+                  {
+                    coordinates[4] = 360;
+                    coordinates[5] = 270;
+                  }
+                  else if (hogNum == 4)
+                  {
+                    coordinates[6] = 520;
+                    coordinates[7] = 270;
+                  }
+                  else if (hogNum == 5)
+                  {
+                    coordinates[8] = 680;
+                    coordinates[9] = 270;
+                  }
+                  else 
+                  {
+                    if (hogNum == 6)
+                    {
+                      coordinates[10] = 840;
+                      coordinates[11] = 270;
+                    }
+                  }             
+                }
+              }
+            }
+          }
+        }        
+        catch (IndexOutOfBoundsException i)
+        {
+        }
+        hogNum = 0;        
+        repaint();
+      }
+    });
+    
+    addMouseMotionListener(new MouseMotionAdapter() {      
+      public void mouseMoved(MouseEvent e) {
+      }      
+      
+      public void mouseDragged(MouseEvent e) {
+        if (e.getX() >= 0 && e.getX() <= 876 && e.getY() >= 0 && e.getY() <= 608)
+        {
+          if (hogNum == 1 && !correctPos[0])
+          {
+            coordinates[0] = e.getX();
+            coordinates[1] = e.getY();
+          }
+          else if (hogNum == 2 && !correctPos[1])
+          {
+            coordinates[2] = e.getX();
+            coordinates[3] = e.getY();
+          }     
+          else if (hogNum == 3 && !correctPos[2])
+          {
+            coordinates[4] = e.getX();
+            coordinates[5] = e.getY();
+          }  
+          else if (hogNum == 4 && !correctPos[3])
+          {
+            coordinates[6] = e.getX();
+            coordinates[7] = e.getY();
+          }  
+          else if (hogNum == 5 && !correctPos[4])
+          {
+            coordinates[8] = e.getX();
+            coordinates[9] = e.getY();
+          }  
+          else 
+          {
+            if (hogNum == 6 && !correctPos[5])
+            {
+              coordinates[10] = e.getX();
+              coordinates[11] = e.getY();
+            }  
+          }
+          repaint();
+        }
+      }
+    });    
+  }
+  
+  /**
+   * This method draws the background, hedgehogs, timer, and messages of encouragement onto the screen.
+   * It also reads in the images from the Images folder and resets the coordinates of the hedgehogs along
+   * with the arrays when the user has successfully placed a whole group of hedgehogs in the boxes. The
+   * try catch block is used to prevent the program from crashing in the event that the image the program
+   * is trying to read in cannot be found.
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>tracker </b> This is a reference variable that points to the MediaTracker 
+   * <p>
+   * <b>background </b> This stores the image that is displayed.
+   * <p>
+   * <b>y </b> This is used within a for loop.
+   * <p>
+   * <b>x </b> This is used within a for loop.
+   * <p>
+   * <b>counter </b> This is used to keep track of the number of unplaced hedgehogs.
+   * <p>   
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>InterruptedException e </b> This is an exception caught when using a MediaTracker.
+   * 
+   * @param g This is needed to draw the image onto the screen.
+   */ 
+  public void paintComponent(Graphics g) 
+  {           
+    MediaTracker tracker = new MediaTracker (new Frame ());    
+    Image background = Toolkit.getDefaultToolkit ().getImage ("resources/Images/Activity Backgrounds/Activity One - Level" + LevelSelect.levelChosen + ".png");
+    tracker.addImage (background, 0);        
+    try
+    {
+      tracker.waitForAll ();
+    }
+    catch (InterruptedException e)
+    {
+    }
+    if (tracker.isErrorAny ())
+    {
+      return;
+    }
+    
+    g.drawImage (background, 0, 0, this);
+    
+    //Drawing the boxes
+    for (int y = 0; y < Hedgehog.numColours; y++)
+    {
+      g.drawImage (Box.boxes.get(y), y * 220, 480, 220, 200, this); 
+    }
+    
+    g.setFont(new Font("Arial", Font.BOLD, 70));
+    g.setColor (Color.white);
+    if (LevelSelect.levelChosen == 1)
+    {
+      g.drawString ("" + LevelSelect.lvlOneScore, 515, 75);
+    }
+    else if (LevelSelect.levelChosen == 2)
+    {
+      g.drawString ("" + LevelSelect.lvlTwoScore, 515, 75);
+    }
+    else
+    {
+      g.drawString ("" + LevelSelect.lvlThreeScore, 515, 75);
+    }
+    
+    int counter = 0;
+    
+    for (int x = 0; x < Hedgehog.hedgehogs.size(); x++) 
+    {
+      if (!correctPos[x])
+      {
+        g.drawImage(Hedgehog.hedgehogs.get(x), coordinates[x*2], coordinates[x*2+1], 120, 70, this);
+        counter++;
+      }
+    }
+    
+    g.setColor (Color.white);
+    g.setFont(new Font("Arial", Font.BOLD, 30));
+    if (phrase == 1)
+    {
+      g.drawString ("YOU GOT THIS!", 775, 560);
+    }
+    else if (phrase == 2)
+    {
+      g.drawString ("AMAZING!!!", 775, 560);
+    }
+    else
+    {
+      if (phrase == 3)
+      {
+        g.drawString ("FANTASTIC!", 775, 560);
+      }
+    }
+    int random = 0;
+    
+    if (counter == 0)
+    {
+      Hedgehog.hedgehogs.clear();
+      Hedgehog.colourOrder.clear();
+      Hedgehog.loadDiffColourHedgehogs();
+      for (int x = 0; x < 6; x++)
+      {
+        correctPos[x] = false;
+      }
+      
+      phrase = (int)(Math.random() * 3 + 1);   
+      
+      coordinates[0] = 40;
+      coordinates[1] = 270;
+      coordinates[2] = 200;
+      coordinates[3] = 270;
+      coordinates[4] = 360;
+      coordinates[5] = 270;
+      coordinates[6] = 520;
+      coordinates[7] = 270;
+      coordinates[8] = 680;
+      coordinates[9] = 270;
+      coordinates[10] = 840;
+      coordinates[11] = 270;
+      
+      repaint();
+    }
+    this.revalidate(); 
+  }
+}

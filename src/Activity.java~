@@ -1,0 +1,282 @@
+/** Tiffany Tran & Aashmika Mali
+  * Date
+  * Activity.java
+  * Ms.Dyke
+  * Place discription here
+  * 
+  * @author Tiffany Tran 
+  * @version 1 Date
+  * Program name: Activity.java
+  */
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.ImageIO;
+
+public  class Activity extends JPanel
+{
+  //The hedgehog we're dealing with
+  int hogNum;
+  
+  //Stores the temp coordinates of the hedgehogs
+  int [] tempX = new int [12]; 
+  int [] tempY = new int [12];
+  
+  boolean [] correctPos = new boolean [6];
+  
+  int [] coordinates = {40, 270, 200, 270, 360, 270, 520, 270, 680, 270, 840, 270};
+  
+  public Activity ()
+  {    
+    Countdown c = new Countdown(); //Can't see it because of all of the code that follows
+    repaint ();
+    addMouseListener(new MouseAdapter(){
+      public void mousePressed(MouseEvent e){
+        
+        int temp1, temp2;
+        temp1 = e.getX();
+        temp2 = e.getY();
+        
+        if (temp1 >= coordinates[0] && temp1 <= coordinates[0] + 120 && temp2 >= coordinates[1] && temp2 <= coordinates[1] + 70) //First hog
+        {
+          hogNum = 1;
+        }
+        else if (temp1 >= coordinates[2] && temp1 <= coordinates[2] + 120 && temp2 >= coordinates[3] && temp2 <= coordinates[3] + 70) //Second hog
+        {
+          hogNum = 2;            
+        }
+        else if (temp1 >= coordinates[4] && temp1 <= coordinates[4] + 120 && temp2 >= coordinates[5] && temp2 <= coordinates[5] + 70) //Third hog
+        {
+          hogNum = 3;            
+        }
+        else if (temp1 >= coordinates[6] && temp1 <= coordinates[6] + 120 && temp2 >= coordinates[7] && temp2 <= coordinates[7] + 70) //Fourth hog
+        {
+          hogNum = 4;             
+        }
+        else if (temp1 >= coordinates[8] && temp1 <= coordinates[8] + 120 && temp2 >= coordinates[9] && temp2 <= coordinates[9] + 70) //Fifth hog
+        {
+          hogNum = 5;            
+        }
+        else 
+        {
+          if (temp1 >= coordinates[10] && temp1 <= coordinates[10] + 120 && temp2 >= coordinates[11] && temp2 <= coordinates[11] + 70) //Sixth hog
+          {
+            hogNum = 6;          
+          }
+        }
+        repaint();
+      }
+      
+      public void mouseReleased(MouseEvent e) {
+        if (hogNum == 1)
+        {
+          tempX[0] = e.getX();
+          tempY[0] = e.getY();
+        }
+        else if (hogNum == 2)
+        {
+          tempX[1] = e.getX();
+          tempY[1] = e.getY();
+        }
+        else if (hogNum == 3)
+        {
+          tempX[2] = e.getX();
+          tempY[2] = e.getY();
+        }
+        else if (hogNum == 4)
+        {
+          tempX[3] = e.getX();
+          tempY[3] = e.getY();
+        }
+        else if (hogNum == 5)
+        {
+          tempX[4] = e.getX();
+          tempY[4] = e.getY();
+        }
+        else 
+        {
+          if (hogNum == 6)
+          {
+            tempX[5] = e.getX();
+            tempY[5] = e.getY();
+          }
+        }
+        
+        if (LevelSelect.levelChosen == 1)  //If statement below - ArrayIndexOutOfBoundsException: -1
+        {
+          try
+          {
+            if ((e.getX() >= 30 && e.getX() <= 105 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(0))) ||(e.getX() >= 253 && e.getX() <= 326 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(1)))) /////////
+            {
+              correctPos[hogNum-1] = true;      
+            }           
+          }
+          catch (ArrayIndexOutOfBoundsException s)
+          {
+          }
+        }
+        else if (LevelSelect.levelChosen == 2)
+        {
+          if ((e.getX() >= 30 && e.getX() <= 105 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(0))) ||(e.getX() >= 253 && e.getX() <= 326 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(1)))||(e.getX() >= 470 && e.getX() <= 549 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(2)))) /////////
+          {
+            correctPos[hogNum-1] = true;      
+          }   
+        }
+        else //Level 3
+        {
+          if ((e.getX() >= 30 && e.getX() <= 105 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(0))) ||(e.getX() >= 253 && e.getX() <= 326 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(1)))||(e.getX() >= 470 && e.getX() <= 549 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(2)))||(e.getX() >= 691 && e.getX() <= 767 && e.getY() >= 478 && e.getY() <= 600 && Hedgehog.colourOrder.get(hogNum-1).equals(Hedgehog.usedColours.get(3)))) /////////
+          {
+            correctPos[hogNum-1] = true;      
+          }   
+        }
+        
+        hogNum = 0;        
+        repaint();
+      }
+    });
+    
+    addMouseMotionListener(new MouseMotionAdapter() {      
+      public void mouseMoved(MouseEvent e) {
+      }      
+      
+      public void mouseDragged(MouseEvent e) {
+        if (e.getX() >= 0 && e.getX() <= 876 && e.getY() >= 0 && e.getY() <= 608)
+        {
+          if (hogNum == 1 && !correctPos[0])
+          {
+            coordinates[0] = e.getX();
+            coordinates[1] = e.getY();
+          }
+          else if (hogNum == 2 && !correctPos[1])
+          {
+            coordinates[2] = e.getX();
+            coordinates[3] = e.getY();
+          }     
+          else if (hogNum == 3 && !correctPos[2])
+          {
+            coordinates[4] = e.getX();
+            coordinates[5] = e.getY();
+          }  
+          else if (hogNum == 4 && !correctPos[3])
+          {
+            coordinates[6] = e.getX();
+            coordinates[7] = e.getY();
+          }  
+          else if (hogNum == 5 && !correctPos[4])
+          {
+            coordinates[8] = e.getX();
+            coordinates[9] = e.getY();
+          }  
+          else 
+          {
+            if (hogNum == 6 && !correctPos[5])
+            {
+              coordinates[10] = e.getX();
+              coordinates[11] = e.getY();
+            }  
+          }
+          repaint();
+        }
+      }
+    });    
+  }
+  
+  public void paintComponent(Graphics g) 
+  {    
+    MediaTracker tracker = new MediaTracker (new Frame ());    
+    Image background = Toolkit.getDefaultToolkit ().getImage ("Images/Activity Backgrounds/Activity One - Level" + LevelSelect.levelChosen + ".png");
+    tracker.addImage (background, 0);        
+    try
+    {
+      tracker.waitForAll ();
+    }
+    catch (InterruptedException e)
+    {
+    }
+    if (tracker.isErrorAny ())
+    {
+      return;
+    }
+    
+    g.drawImage (background, 0, 0, this); //Background////////////////////////////////
+//    
+    //Drawing the boxes
+    for (int y = 0; y < Hedgehog.numColours; y++)
+    {
+      g.drawImage (Box.boxes.get(y), y * 220, 480, 220, 200, this);
+    }
+    
+    if (hogNum == 1 && !correctPos[0])
+    {
+      g.drawImage(Hedgehog.hedgehogs.get(0), coordinates[0], coordinates[1], 120, 70, this);
+    }
+    else if (hogNum == 2 && !correctPos[1])
+    {      
+      g.drawImage(Hedgehog.hedgehogs.get(1), coordinates[2], coordinates[3], 120, 70, this);
+    }
+    else if (hogNum == 3 && !correctPos[2])
+    {      
+      g.drawImage(Hedgehog.hedgehogs.get(2), coordinates[4], coordinates[5], 120, 70, this);
+    }
+    else if (hogNum == 4 && !correctPos[3])
+    {      
+      g.drawImage(Hedgehog.hedgehogs.get(3), coordinates[6], coordinates[7], 120, 70, this);
+    }
+    else if (hogNum == 5 && !correctPos[4])
+    {      
+      g.drawImage(Hedgehog.hedgehogs.get(4), coordinates[8], coordinates[9], 120, 70, this);
+    }
+    else
+    {
+      if (hogNum == 6 && !correctPos[5])
+      {      
+        g.drawImage(Hedgehog.hedgehogs.get(5), coordinates[10], coordinates[11], 120, 70, this);
+      }
+    }
+    
+    int counter = 0;
+    
+    //Redrawing other hedgehogs
+    for (int x = 0; x < Hedgehog.hedgehogs.size(); x++) 
+    {
+      if (!correctPos[x])
+      {
+        g.drawImage(Hedgehog.hedgehogs.get(x), coordinates[x*2], coordinates[x*2+1], 120, 70, this);
+        counter++;
+      }
+    }
+    
+    int random = 0;
+    
+    if (counter == 0)
+    {
+      Hedgehog.hedgehogs.clear();
+      Hedgehog.colourOrder.clear();
+      Hedgehog.loadDiffColourHedgehogs();
+      
+      for (int x = 0; x < 6; x++)
+      {
+        correctPos[x] = false;
+      }
+      
+      coordinates[0] = 40;
+      coordinates[1] = 270;
+      coordinates[2] = 200;
+      coordinates[3] = 270;
+      coordinates[4] = 360;
+      coordinates[5] = 270;
+      coordinates[6] = 520;
+      coordinates[7] = 270;
+      coordinates[8] = 680;
+      coordinates[9] = 270;
+      coordinates[10] = 840;
+      coordinates[11] = 270;
+      
+      repaint();
+    }
+    
+    this.revalidate(); 
+  }
+}

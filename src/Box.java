@@ -1,0 +1,83 @@
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.awt.image.*;
+import java.awt.event.*;
+
+/**
+ * This class is used to get and store images of boxes based on the activity that requires boxes.
+ * Note that since javadoc is not picking up caught exceptions, we included the exceptions in the local
+ * variables.
+ * <p><b>Verison 1 (4 Hours):</b> The constructor was implemented for Activity 1.</p>
+ * <p><b>Verison 2 (2 Hour):</b> The constructor was modified for Activity 3.</p>
+ * @author Tiffany Tran
+ * @version 1 05.19.16
+ * @version 2 05.28.16
+ * Program name: Box.java
+ */
+
+public class Box extends JPanel 
+{
+  /**
+   * This is a static variable that stores an array of images of boxes.
+   */
+  static public ArrayList <Image> boxes = new ArrayList <Image> ();
+  
+  /**
+   * This is the class constructor. It first clears the array list containing old boxes. Then, it 
+   * uses an if statement to determine which kind of box image it should get and the number of boxes 
+   * it should get. After that, it gets the image and adds it to the MediaTracker and the array list.
+   * The try catch block is there to stop the program from crashing if the image it is trying to get 
+   * does not exist.
+   * 
+   * 
+   * <p>
+   * <b>Local variables: </b>
+   * <p>
+   * <b>tracker </b> This is a reference variable that points to the MediaTracker class.
+   * <p>
+   * <b>x </b> This is the int variable used in the for loops, and is incremented.
+   * <p>
+   * <b>Exceptions</b>:
+   * <p>
+   * <b>InterruptedException e </b> This is the caught exception used for the tracker.
+   */ 
+  public Box ()
+  {
+    boxes.clear();
+    MediaTracker tracker = new MediaTracker (new Frame ());    
+    
+    if (LevelSelect.activityNum == 1)
+    {
+      for (int x = 0; x < LevelSelect.levelChosen + 1; x++)
+      {
+        boxes.add (Toolkit.getDefaultToolkit ().getImage ("resources/Images/Boxes/" + Hedgehog.usedColours.get(x) + ".png"));
+        tracker.addImage (boxes.get(x), x);
+      }
+    }
+    else 
+    {        
+      if (LevelSelect.activityNum == 3)
+      {
+        for (int x = 0; x < 6; x++)
+        {
+          boxes.add (Toolkit.getDefaultToolkit ().getImage ("resources/Images/Boxes/Brown Box.png"));
+          tracker.addImage (boxes.get(x), x);
+        }
+      }
+    }    
+    
+    try
+    {
+      tracker.waitForAll ();
+    }
+    catch (InterruptedException e)
+    {
+    }
+    if (tracker.isErrorAny ())
+    {
+      return;
+    }
+  }
+}
