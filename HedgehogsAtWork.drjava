@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<drjava version="drjava-20140826-r5761">
+  <project autorefresh="true" build="../class files/" main="Driver" manifest="" root="" work="src/">
+    <createjar file="HedgehogsAtWork.jar" flags="12"/>
+    <source>
+      <file active="true" name="src/LevelSelect.java" package="" timestamp="09-Jun-2016 18:16:54">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Activity1.java" package="" timestamp="06-Jun-2016 19:31:40">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Activity2.java" package="" timestamp="06-Jun-2016 19:31:58">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Box.java" package="" timestamp="06-Jun-2016 19:32:30">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Instructions.java" package="" timestamp="06-Jun-2016 19:34:04">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/LevelComplete.java" package="" timestamp="06-Jun-2016 19:34:16">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/SplashScreen.java" package="" timestamp="06-Jun-2016 19:36:12">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Activity3.java" package="" timestamp="09-Jun-2016 17:55:56">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Highscores.java" package="" timestamp="09-Jun-2016 17:57:56">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Levels.java" package="" timestamp="09-Jun-2016 17:58:14">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Driver.java" package="" timestamp="09-Jun-2016 18:00:58">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/MainMenu.java" package="" timestamp="09-Jun-2016 18:03:38">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Certificate.java" package="" timestamp="09-Jun-2016 18:03:40">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Pause.java" package="" timestamp="09-Jun-2016 18:03:48">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Countdown.java" package="" timestamp="09-Jun-2016 18:12:58">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+      <file name="src/Hedgehog.java" package="" timestamp="09-Jun-2016 18:13:10">
+        <select from="1793" to="1793"/>
+        <scroll column="835" row="0"/>
+      </file>
+    </source>
+    <included/>
+    <excluded/>
+    <collapsed/>
+    <classpath>
+      <file absolute="true" name="G:/HedgehogsAtWorkVersion5/../Images"/>
+      <file absolute="true" name="G:/HedgehogsAtWorkVersion5/src/Hedgehogs at Work Help File"/>
+      <file absolute="true" name="G:/HedgehogsAtWorkVersion5/src/Highscores"/>
+    </classpath>
+    <breakpoints/>
+    <watches/>
+    <bookmarks/>
+    <preferences/>
+  </project>
+</drjava>
