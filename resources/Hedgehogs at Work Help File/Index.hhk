@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Welcome">
+		<param name="Name" value="About File">
+		<param name="Local" value="AboutFile.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Printing">
+		<param name="Name" value="Printing">
+		<param name="Local" value="Printing.htm">
+		<param name="Comment" value="The printing code is used to allow the user to print from the game. A url of the link we used to help develop the code for printing is provided.">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Citations">
+		<param name="Name" value="Music Citations">
+		<param name="Local" value="MusicCitations.htm">
+		<param name="Name" value="Picture Citations">
+		<param name="Local" value="PictureCitations.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="DVD">
+		<param name="Name" value="Running">
+		<param name="Local" value="Running.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Installing">
+		<param name="Name" value="Downloading">
+		<param name="Local" value="Downloading.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Uninstalling">
+		<param name="Name" value="Downloading">
+		<param name="Local" value="Downloading.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Help">
+		<param name="Name" value="Game Play">
+		<param name="Local" value="GamePlay.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Super Hedgehog">
+		<param name="Name" value="Printing">
+		<param name="Local" value="Printing.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Key Shorts">
+		<param name="Name" value="Keyboard Shortcuts">
+		<param name="Local" value="KeyboardShortcuts.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Project Date">
+		<param name="Name" value="About File">
+		<param name="Local" value="AboutFile.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Version">
+		<param name="Name" value="About File">
+		<param name="Local" value="AboutFile.htm">
+		</OBJECT>
+</UL>
+</BODY></HTML>

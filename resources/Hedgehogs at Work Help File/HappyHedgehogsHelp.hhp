@@ -1,0 +1,30 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=File.chm
+Contents file=G:\HedgehogsAtWorkVersion5\resources\Hedgehogs at Work Help File\Table of Contents.hhc
+Default Window=Help
+Default topic=HelpFile.htm
+Display compile progress=No
+Index file=Index.hhk
+Language=0x1009 English (Canada)
+Title=Happy Hedgehog's Help
+
+[WINDOWS]
+Help="Happy Hedgehogs Help!","..\..\..\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\Table of Contents.hhc","Index.hhk","HelpFile.htm",,,,,,0x2120,,0x3006,,,,,,,,0
+
+
+[FILES]
+HelpFile.htm
+AboutFile.htm
+GettingStarted.htm
+Downloading.htm
+GamePlay.htm
+Printing.htm
+Running.htm
+MusicCitations.htm
+PictureCitations.htm
+CodeCitations.htm
+KeyboardShortcuts.htm
+
+[INFOTYPES]
+

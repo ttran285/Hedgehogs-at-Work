@@ -1,0 +1,62 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=..\..\..\..\..\..\..\gr.chm
+Contents file=..\..\..\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\Table of Contents.hhc
+Default topic=HelpFile.htm
+Display compile progress=No
+Language=0x1009 English (Canada)
+
+
+[FILES]
+HelpFile.htm
+
+[INFOTYPES]
+
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling g:\gr.chm
+
+
+Compile time: 0 minutes, 0 seconds
+1	Topic
+1	Local link
+0	Internet links
+0	Graphics
+
+
+Created g:\gr.chm, 10,710 bytes
+Compression increased file by 9,752 bytes.
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling g:\gr.chm
+
+HHC6000: Error: An internal file could not be created. Make certain there is enough disk space on the drive where you are compiling your file.
+HHC5007: Error: Fatal navigational compilation error. This is likely the result of an invalid contents (.hhc) file.
+
+
+The following files were not compiled:
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling g:\gr.10 stuff\ICS 12\All Programs\AashmikaTiffanyISP\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\File.chm
+
+HHC6000: Error: An internal file could not be created. Make certain there is enough disk space on the drive where you are compiling your file.
+HHC5007: Error: Fatal navigational compilation error. This is likely the result of an invalid contents (.hhc) file.
+
+
+The following files were not compiled:
+HHC5010: Error: Cannot open "g:\gr.10 stuff\ICS 12\All Programs\AashmikaTiffanyISP\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\File.chm". Compilation stopped.
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling g:\gr.10 stuff\ICS 12\All Programs\AashmikaTiffanyISP\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\File.chm
+
+
+Compile time: 0 minutes, 0 seconds
+3	Topics
+3	Local links
+0	Internet links
+0	Graphics
+
+
+Created g:\gr.10 stuff\ICS 12\All Programs\AashmikaTiffanyISP\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\File.chm, 11,532 bytes
+Compression increased file by 8,524 bytes.
+HHC5010: Error: Cannot open "g:\gr.10 stuff\ICS 12\All Programs\AashmikaTiffanyISP\HedgehogsAtWorkVersion4update3\Classes\Hedgehogs at Work Help File\File.chm". Compilation stopped.
