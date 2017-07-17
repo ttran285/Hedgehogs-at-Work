@@ -1,5 +1,5 @@
 # Hedgehogs-at-Work
-An educational Java game created for children ages 3-5. It focuses on colour, classification by size and arithmetic.
+An educational Java game created for children ages 3-5 that focuses on colour, classification by size and arithmetic.
 <p>This game includes:</p>
 
      - 3 levels of difficulity with 3 mini-games within each level
